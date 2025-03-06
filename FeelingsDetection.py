@@ -17,7 +17,7 @@ df = pd.read_csv(file_path, sep='\t', encoding="utf-8", header=None, names=["Dat
 df['Date'] = pd.to_datetime(df['Date'], format='%Y%m%d %H:%M:%S', errors='coerce')
 
 # Extraire l'année, le mois, le jour, et le temps de la colonne 'Date'
-df['Année'] = df['Date'].dt.year
+df['Annee'] = df['Date'].dt.year
 df['Mois'] = df['Date'].dt.month
 df['Jour'] = df['Date'].dt.day
 df['Time'] = df['Date'].dt.strftime('%H:%M:%S')  # Extraire l'heure, les minutes et les secondes
