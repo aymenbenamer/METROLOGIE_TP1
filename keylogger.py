@@ -67,7 +67,7 @@ def save_log():
 
     if log and session_active:
         typing_speed = calculate_typing_speed()
-        log_entry = log + f"\tVitesse d'écriture moyenne : {typing_speed} mots/min\n"
+        log_entry = log + f"\t{typing_speed}\n"
 
         with open(path, "a", encoding="utf-8") as logfile:
             logfile.write(log_entry)
@@ -102,3 +102,4 @@ keyboard_listener = Listener(on_press=on_press)
 
 with keyboard_listener:
     keyboard_listener.join()
+    

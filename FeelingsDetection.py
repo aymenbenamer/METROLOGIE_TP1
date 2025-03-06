@@ -2,60 +2,50 @@ import pandas as pd
 import re  # Pour utiliser les expressions régulières afin d'extraire les nombres
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 
-def analyze_sentiments(file_path):
-    analyzer = SentimentIntensityAnalyzer()
-    
-    with open(file_path, 'r') as file:
-        lines = file.readlines()
-    
-    for line in lines:
-        sentiment = analyzer.polarity_scores(line)
-        print(f"Sentence: {line.strip()}")
-        print(f"Sentiment: {sentiment}")
-        print("-" * 50)
 
+analyzer = SentimentIntensityAnalyzer()
 
-def lire_dataframe(file_path, csv_output_path):
-    try:
-        with open(file_path, "r", encoding="utf-8") as file:
-            lignes = [ligne.strip() for ligne in file.readlines()]
+import pandas as pd
 
-        # Séparation des colonnes Date et Contenu, et extraction des nombres
-        data = []
-        for ligne in lignes:
-            # Séparer la ligne en Date et Contenu
-            parts = ligne.split("\t", 1) if "\t" in ligne else [ligne, ""]
-            
-            # Extraire le nombre à la fin de la ligne (si présent)
-            match = re.search(r'(\d+)$', parts[1])  # Recherche d'un nombre à la fin de la ligne
-            nombre = match.group(1) if match else ""  # Si un nombre est trouvé, on le prend, sinon on laisse vide
-            
-            # Ajouter le nombre à la ligne
-            data.append([parts[0], parts[1], nombre])
-
-        # Création du DataFrame avec colonnes Date, Contenu, Nombre
-        df = pd.DataFrame(data, columns=["Date", "Contenu", "Nombre"])
-
-        # Améliorer l'affichage
-        pd.set_option('display.colheader_justify', 'center')
-
-        # Enregistrer le DataFrame dans un fichier CSV
-        df.to_csv(csv_output_path, index=False, encoding="utf-8")
-
-        return df
-    except Exception as e:
-        print(f"Erreur lors de la lecture du fichier : {e}")
-        return None
-
-# Exemple d'utilisation
 file_path = "/Users/achrafbenamer/Desktop/METROLOGIE TP 1/logs.txt"
-csv_output_path = "/Users/achrafbenamer/Desktop/METROLOGIE TP 1/csv_output.txt"
+csv_output_path = "/Users/achrafbenamer/Desktop/METROLOGIE TP 1/output.csv"
 
-df = lire_dataframe(file_path, csv_output_path)
+# Lire le fichier texte avec des tabulations comme séparateurs sans entêtes, en définissant les noms des colonnes 
+df = pd.read_csv(file_path, sep='\t', encoding="utf-8", header=None, names=["Date", "Contenu", "Nombre"])
+
+# Convertir la colonne 'Date' en format datetime avec un format spécifique (YYYYMMDD HH:MM:SS)
+df['Date'] = pd.to_datetime(df['Date'], format='%Y%m%d %H:%M:%S', errors='coerce')
+
+# Extraire l'année, le mois, le jour, et le temps de la colonne 'Date'
+df['Année'] = df['Date'].dt.year
+df['Mois'] = df['Date'].dt.month
+df['Jour'] = df['Date'].dt.day
+df['Time'] = df['Date'].dt.strftime('%H:%M:%S')  # Extraire l'heure, les minutes et les secondes
+
+# Initialiser une liste pour stocker les scores de sentiment
+sentiments = []
+
+# Parcourir chaque ligne de la colonne 'Contenu'
+for line in df.Contenu:
+    sentiment = analyzer.polarity_scores(line)
+    sentiments.append(sentiment)
+    print(f"Sentence: {line.strip()}")
+    print(f"Sentiment: {sentiment}")
+    print("-" * 50)
+
+# Convertir la liste de sentiments en DataFrame
+sentiment_df = pd.DataFrame(sentiments)
+
+# Concaténer les scores de sentiment avec le DataFrame original
+df = pd.concat([df, sentiment_df], axis=1)
 
 
+# Affichage des premières lignes pour vérifier si les colonnes sont correctement définies
+print(df.head())
 
+# Sauvegarder le DataFrame dans un fichier CSV avec un séparateur ';'
+df.to_csv(csv_output_path, index=False, encoding="utf-8", sep=";")
 
+# Afficher le DataFrame final
+print(df.to_string(index=False))
 
-
-analyze_sentiments('/Users/achrafbenamer/Desktop/METROLOGIE TP 1/logs.txt')
