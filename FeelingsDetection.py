@@ -32,9 +32,18 @@ for line in df.Contenu:
     print(f"Sentence: {line.strip()}")
     print(f"Sentiment: {sentiment}")
     print("-" * 50)
-
+    
+print(sentiments)
 # Convertir la liste de sentiments en DataFrame
 sentiment_df = pd.DataFrame(sentiments)
+
+print(df.head())
+
+for index, cpd in sentiment_df.iterrows():
+    if df.at[index, "Nombre"] < 40:
+        sentiment_df.at[index, "compound"] += cpd["compound"]*0.05
+    elif df.at[index, "Nombre"] > 60:
+        sentiment_df.at[index, "compound"] -= cpd["compound"]*0.05
 
 # Concaténer les scores de sentiment avec le DataFrame original
 df = pd.concat([df, sentiment_df], axis=1)
@@ -47,5 +56,5 @@ print(df.head())
 df.to_csv(csv_output_path, index=False, encoding="utf-8", sep=";")
 
 # Afficher le DataFrame final
-print(df.to_string(index=False))
+#print(df.to_string(index=False))
 
