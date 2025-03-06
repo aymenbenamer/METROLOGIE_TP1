@@ -12,5 +12,5 @@ def analyze_sentiments(file_path):
         print(f"Sentiment: {sentiment}")
         print("-" * 50)
 
-if __name__ == "__main__":
-    analyze_sentiments('/Users/achrafbenamer/Desktop/METROLOGIE TP 1/logs.txt')
+
+analyze_sentiments('/Users/achrafbenamer/Desktop/METROLOGIE TP 1/logs.txt')
