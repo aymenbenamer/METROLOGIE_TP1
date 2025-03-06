@@ -1,11 +1,9 @@
 import pandas as pd
-import re  # Pour utiliser les expressions régulières afin d'extraire les nombres
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 
 
 analyzer = SentimentIntensityAnalyzer()
 
-import pandas as pd
 
 file_path = "/Users/achrafbenamer/Desktop/METROLOGIE TP 1/logs.txt"
 csv_output_path = "/Users/achrafbenamer/Desktop/METROLOGIE TP 1/output.csv"
