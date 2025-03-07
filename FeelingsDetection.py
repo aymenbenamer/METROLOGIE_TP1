@@ -57,7 +57,7 @@ def run_script():
         df.to_csv(csv_output_path, index=False)
 
         # Attendre 15 secondes avant la prochaine exécution
-        time.sleep(15)
+        time.sleep(10)
 
 # Créer et démarrer le thread
 thread = threading.Thread(target=run_script)
