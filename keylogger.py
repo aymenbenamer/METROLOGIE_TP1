@@ -3,6 +3,7 @@ import threading
 from pynput.keyboard import Key, Listener
 import time
 from datetime import datetime
+from googletrans import Translator
 
 log = ""  
 session_active = False  
@@ -62,17 +63,25 @@ def processkeys(key):
 
     print(f"Saisie actuelle : {log}")
 
+def translate_text(text, dest_language="en"):
+    """Traduit le texte en anglais."""
+    translator = Translator()
+    translated = translator.translate(text, dest=dest_language)
+    return translated.text
+
 def save_log():
     global log, path, session_active
 
     if log and session_active:
         typing_speed = calculate_typing_speed()
-        log_entry = log + f"\t{typing_speed}\n"
+        translated_log = translate_text(log)  # Traduire le texte
+
+        log_entry = translated_log + f"\t{typing_speed}\n"
 
         with open(path, "a", encoding="utf-8") as logfile:
             logfile.write(log_entry)
 
-        print(f"💾 Log sauvegardé : {log_entry.strip()}")
+        print(f"💾 Log traduit et sauvegardé : {log_entry.strip()}")
 
         log = ""  
         session_active = False  
@@ -102,4 +111,3 @@ keyboard_listener = Listener(on_press=on_press)
 
 with keyboard_listener:
     keyboard_listener.join()
-

@@ -3,12 +3,12 @@ import subprocess
 import time
 
 def run_keylogger():
-    subprocess.run(["python3", "/Users/achrafbenamer/Desktop/METROLOGIE TP 1/keylogger.py"])
+    subprocess.run(["/opt/anaconda3/bin/python", "/Users/achrafbenamer/Desktop/METROLOGIE TP 1/keylogger.py"])
 
 def run_feelings_detection():
     while True:
-        subprocess.run(["python3", "/Users/achrafbenamer/Desktop/METROLOGIE TP 1/FeelingsDetection.py"])
-        time.sleep(15)
+        subprocess.run(["/opt/anaconda3/bin/python", "/Users/achrafbenamer/Desktop/METROLOGIE TP 1/FeelingsDetection.py"])
+        time.sleep(10)
 
 if __name__ == "__main__":
     keylogger_thread = threading.Thread(target=run_keylogger)
